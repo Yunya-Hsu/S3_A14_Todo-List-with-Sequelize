@@ -29,6 +29,17 @@ router.get('/register', (req, res) => {
 router.post('/register', (req, res) => {
   const { name, email, password, confirmPassword } = req.body
 
+  if (!name || !email || !password || !confirmPassword) {
+    req.flash('somethingMissing', '請確認所有欄位皆已填寫，再送出')
+    return res.render('register', {
+      name,
+      email,
+      password,
+      confirmPassword,
+      somethingMissing: req.flash('somethingMissing')
+    })
+  }
+
   if (password !== confirmPassword) {
     req.flash('wrongConfirm', '輸入密碼與確認密碼不相符，請重新輸入')
     return res.render('register', {
