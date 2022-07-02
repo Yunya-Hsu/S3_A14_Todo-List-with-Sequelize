@@ -1,0 +1,41 @@
+{{#if wrongConfirm}}
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+  {{wrongConfirm}}
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{{/if}}
+
+{{#if existedUser}}
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+  {{existedUser}}
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{{/if}}
+
+{{#if successLogout}}
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+  {{successLogout}}
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{{/if}}
+
+{{#if registerSuccess}}
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+  {{registerSuccess}}
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{{/if}}
+
+{{#if notLogin}}
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+  {{notLogin}}
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{{/if}}
+
+{{#if loginFail}}
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+  {{loginFail}}
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{{/if}}

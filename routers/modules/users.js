@@ -1,19 +1,26 @@
 const express = require('express')
 const router = express.Router()
 
+const passport = require('passport')
 const bcrypt = require('bcryptjs')
 
 const db = require('../../models')
-const Todo = db.Todo
 const User = db.User
 
 router.get('/login', (req, res) => {
-  res.render('login')
+  res.render('login', {
+    successLogout: req.flash('successLogout'),
+    registerSuccess: req.flash('registerSuccess'),
+    notLogin: req.flash('notLogin'),
+    loginFail: req.flash('loginFail')
+  })
 })
 
-router.post('/login', (req, res) => {
-  res.send('login')
+router.post('/login', passport.authenticate('local', {
+  successRedirect: '/',
+  failureRedirect: '/users/login'
 })
+)
 
 router.get('/register', (req, res) => {
   res.render('register')
@@ -21,17 +28,30 @@ router.get('/register', (req, res) => {
 
 router.post('/register', (req, res) => {
   const { name, email, password, confirmPassword } = req.body
+
+  if (password !== confirmPassword) {
+    req.flash('wrongConfirm', '輸入密碼與確認密碼不相符，請重新輸入')
+    return res.render('register', {
+      name,
+      email,
+      password,
+      wrongConfirm: req.flash('wrongConfirm')
+    })
+  }
+
   User.findOne({ where: { email } })
     .then(user => {
       if (user) {
-        console.log('User already exists')
+        req.flash('existedUser', '此帳號已經存在，請選擇其他email進行註冊')
         return res.render('register', {
           name,
           email,
           password,
-          confirmPassword
+          confirmPassword,
+          existedUser: req.flash('existedUser')
         })
       }
+
       return bcrypt
         .genSalt(10)
         .then(salt => bcrypt.hash(password, salt))
@@ -40,13 +60,18 @@ router.post('/register', (req, res) => {
           email,
           password: hash
         }))
-        .then(() => res.redirect('/'))
+        .then(() => {
+          req.flash('registerSuccess', '您已成功註冊，請登入帳號')
+          res.redirect('/users/login')
+        })
         .catch(err => console.log(err))
     })
 })
 
 router.get('/logout', (req, res) => {
-  res.send('logout')
+  req.logout()
+  req.flash('successLogout', '您已成功登出')
+  res.redirect('/users/login')
 })
 
 module.exports = router
